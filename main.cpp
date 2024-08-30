@@ -4,7 +4,7 @@
 
 using namespace std;
 
-// class named Book
+// Book class representing a book in the library
 class Book {
 private:
     string title;
@@ -13,11 +13,11 @@ private:
     bool isAvailable;
 
 public:
-    // initializing a book using constructor
+    // Constructor to initialize a book
     Book(string t, string a, string isbn)
         : title(t), author(a), ISBN(isbn), isAvailable(true) {}
 
-    //get book Method
+    // Method to get book details
     void getDetails() const {
         cout << "Title: " << title << endl;
         cout << "Author: " << author << endl;
@@ -25,45 +25,45 @@ public:
         cout << "Available: " << (isAvailable ? "Yes" : "No") << endl;
     }
 
-    //check availability of the book method
+    // Method to check availability of the book
     bool checkAvailability() const {
-        return isAvailable;
+        return this->isAvailable;
     }
 
-    //get book's ISBN method
+    // Method to get the book's ISBN
     string getISBN() const {
-        return ISBN;
+        return this->ISBN;
     }
 
-    //set availability status method
+    // Method to set availability status
     void setAvailability(bool status) {
-        isAvailable = status;
+        this->isAvailable = status;
     }
 
-    //get title method
+    // Method to get the title
     string getTitle() const {
-        return title;
+        return this->title;
     }
 
-    //get author method
+    // Method to get the author
     string getAuthor() const {
-        return author;
+        return this->author;
     }
 };
 
-// Library class
+// Library class representing a collection of books
 class Library {
 private:
     vector<Book> books;
 
 public:
-    //add book method
+    // Method to add a book to the library
     void addBook(const Book& book) {
         books.push_back(book);
         cout << "Book added successfully." << endl;
     }
 
-    //remove book method
+    // Method to remove a book from the library by ISBN
     void removeBook(string isbn) {
         for (auto it = books.begin(); it != books.end(); ++it) {
             if (it->getISBN() == isbn) {
@@ -75,7 +75,7 @@ public:
         cout << "Book not found." << endl;
     }
 
-    //search book method(using title)
+    // Method to search for a book by title
     void searchBookByTitle(string title) const {
         for (const auto& book : books) {
             if (book.getTitle() == title) {
@@ -86,7 +86,7 @@ public:
         cout << "Book not found." << endl;
     }
 
-    //search book method(using author)
+    // Method to search for a book by author
     void searchBookByAuthor(string author) const {
         for (const auto& book : books) {
             if (book.getAuthor() == author) {
@@ -97,7 +97,7 @@ public:
         cout << "Book not found." << endl;
     }
 
-    //list all books method
+    // Method to list all books in the library
     void listBooks() const {
         if (books.empty()) {
             cout << "No books in the library." << endl;
