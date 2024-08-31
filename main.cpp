@@ -54,7 +54,7 @@ public:
 // Library class representing a collection of books
 class Library {
 private:
-    vector<Book> books;
+    vector<Book> books;  // Array (vector) of objects
 
 public:
     // Method to add a book to the library
@@ -110,3 +110,70 @@ public:
         }
     }
 };
+
+// Main code under in main
+int main() {
+    Library library;
+    int choice;
+
+    do {
+        cout << "\nLibrary Management System\n";
+        cout << "1. Add Book\n";
+        cout << "2. Remove Book\n";
+        cout << "3. Search Book by Title\n";
+        cout << "4. Search Book by Author\n";
+        cout << "5. List All Books\n";
+        cout << "6. Exit\n";
+        cout << "Enter your choice: ";
+        cin >> choice;
+
+        cin.ignore();
+
+        switch (choice) {
+            case 1: {
+                string title, author, isbn;
+                cout << "Enter book title: ";
+                getline(cin, title);
+                cout << "Enter book author: ";
+                getline(cin, author);
+                cout << "Enter book ISBN: ";
+                getline(cin, isbn);
+
+                Book newBook(title, author, isbn);
+                library.addBook(newBook);
+                break;
+            }
+            case 2: {
+                string isbn;
+                cout << "Enter ISBN of the book to remove: ";
+                getline(cin, isbn);
+                library.removeBook(isbn);
+                break;
+            }
+            case 3: {
+                string title;
+                cout << "Enter title of the book to search: ";
+                getline(cin, title);
+                library.searchBookByTitle(title);
+                break;
+            }
+            case 4: {
+                string author;
+                cout << "Enter author of the book to search: ";
+                getline(cin, author);
+                library.searchBookByAuthor(author);
+                break;
+            }
+            case 5:
+                library.listBooks();
+                break;
+            case 6:
+                cout << "Exiting the system..." << endl;
+                break;
+            default:
+                cout << "Invalid choice! Please try again." << endl;
+        }
+    } while (choice != 6);
+
+    return 0;
+}
