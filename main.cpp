@@ -12,11 +12,17 @@ private:
     bool isAvailable;
 
 public:
+    static int totalBooks; // Static variable to keep track of total books added
+
     Book(string t, string a, string isbn)
-        : title(t), author(a), ISBN(isbn), isAvailable(true) {}
+        : title(t), author(a), ISBN(isbn), isAvailable(true) {
+        totalBooks++; // Increment totalBooks whenever a new book is created
+    }
 
     // Destructor
-    ~Book() {}
+    ~Book() {
+        totalBooks--; // Decrement totalBooks when a book is destroyed
+    }
 
     void getDetails() const {
         cout << "Title: " << title << endl;
@@ -46,11 +52,15 @@ public:
     }
 };
 
+int Book::totalBooks = 0; // Initialize static variable
+
 class Library {
 private:
     vector<Book*> books;
 
 public:
+    static int searchCount; // Static variable to keep track of searches
+
     void addBook(Book* book) {
         books.push_back(book);
         cout << "Book added successfully." << endl;
@@ -59,7 +69,7 @@ public:
     void removeBook(string isbn) {
         for (auto it = books.begin(); it != books.end(); ++it) {
             if ((*it)->getISBN() == isbn) {
-                delete *it; //here
+                delete *it; // Deleting the book
                 books.erase(it);
                 cout << "Book removed successfully." << endl;
                 return;
@@ -72,6 +82,7 @@ public:
         for (const auto& book : books) {
             if (book->getTitle() == title) {
                 book->getDetails();
+                Library::searchCount++; // Increment search count
                 return;
             }
         }
@@ -82,6 +93,7 @@ public:
         for (const auto& book : books) {
             if (book->getAuthor() == author) {
                 book->getDetails();
+                Library::searchCount++; // Increment search count
                 return;
             }
         }
@@ -107,6 +119,8 @@ public:
     }
 };
 
+int Library::searchCount = 0; // Initialize static variable
+
 // Main code
 int main() {
     Library library;
@@ -119,7 +133,8 @@ int main() {
         cout << "3. Search Book by Title\n";
         cout << "4. Search Book by Author\n";
         cout << "5. List All Books\n";
-        cout << "6. Exit\n";
+        cout << "6. Show Total Books and Searches\n";
+        cout << "7. Exit\n";
         cout << "Enter your choice: ";
         cin >> choice;
 
@@ -164,6 +179,10 @@ int main() {
                 library.listBooks();
                 break;
             case 6:
+                cout << "Total Books in Library: " << Book::totalBooks << endl;
+                cout << "Total Searches Conducted: " << Library::searchCount << endl;
+                break;
+            case 7:
                 cout << "Exiting the system..." << endl;
                 return 0;
             default:
