@@ -4,7 +4,6 @@
 
 using namespace std;
 
-// Book class representing a book in the library
 class Book {
 private:
     string title;
@@ -13,11 +12,12 @@ private:
     bool isAvailable;
 
 public:
-    // Constructor to initialize a book
     Book(string t, string a, string isbn)
         : title(t), author(a), ISBN(isbn), isAvailable(true) {}
 
-    // Method to get book details
+    // Destructor
+    ~Book() {}
+
     void getDetails() const {
         cout << "Title: " << title << endl;
         cout << "Author: " << author << endl;
@@ -25,48 +25,41 @@ public:
         cout << "Available: " << (isAvailable ? "Yes" : "No") << endl;
     }
 
-    // Method to check availability of the book
     bool checkAvailability() const {
         return this->isAvailable;
     }
 
-    // Method to get the book's ISBN
     string getISBN() const {
         return this->ISBN;
     }
 
-    // Method to set availability status
     void setAvailability(bool status) {
         this->isAvailable = status;
     }
 
-    // Method to get the title
     string getTitle() const {
         return this->title;
     }
 
-    // Method to get the author
     string getAuthor() const {
         return this->author;
     }
 };
 
-// Library class representing a collection of books
 class Library {
 private:
-    vector<Book> books;  // Array (vector) of objects
+    vector<Book*> books;
 
 public:
-    // Method to add a book to the library
-    void addBook(const Book& book) {
+    void addBook(Book* book) {
         books.push_back(book);
         cout << "Book added successfully." << endl;
     }
 
-    // Method to remove a book from the library by ISBN
     void removeBook(string isbn) {
         for (auto it = books.begin(); it != books.end(); ++it) {
-            if (it->getISBN() == isbn) {
+            if ((*it)->getISBN() == isbn) {
+                delete *it; //here
                 books.erase(it);
                 cout << "Book removed successfully." << endl;
                 return;
@@ -75,29 +68,26 @@ public:
         cout << "Book not found." << endl;
     }
 
-    // Method to search for a book by title
     void searchBookByTitle(string title) const {
         for (const auto& book : books) {
-            if (book.getTitle() == title) {
-                book.getDetails();
+            if (book->getTitle() == title) {
+                book->getDetails();
                 return;
             }
         }
         cout << "Book not found." << endl;
     }
 
-    // Method to search for a book by author
     void searchBookByAuthor(string author) const {
         for (const auto& book : books) {
-            if (book.getAuthor() == author) {
-                book.getDetails();
+            if (book->getAuthor() == author) {
+                book->getDetails();
                 return;
             }
         }
         cout << "Book not found." << endl;
     }
 
-    // Method to list all books in the library
     void listBooks() const {
         if (books.empty()) {
             cout << "No books in the library." << endl;
@@ -105,18 +95,24 @@ public:
         }
 
         for (const auto& book : books) {
-            book.getDetails();
+            book->getDetails();
             cout << "-------------------" << endl;
+        }
+    }
+
+    ~Library() {
+        for (auto book : books) {
+            delete book;
         }
     }
 };
 
-// Main code under in main
+// Main code
 int main() {
     Library library;
     int choice;
 
-    do {
+    for (;;) {
         cout << "\nLibrary Management System\n";
         cout << "1. Add Book\n";
         cout << "2. Remove Book\n";
@@ -139,7 +135,7 @@ int main() {
                 cout << "Enter book ISBN: ";
                 getline(cin, isbn);
 
-                Book newBook(title, author, isbn);
+                Book* newBook = new Book(title, author, isbn); // Dynamic allocation
                 library.addBook(newBook);
                 break;
             }
@@ -169,11 +165,11 @@ int main() {
                 break;
             case 6:
                 cout << "Exiting the system..." << endl;
-                break;
+                return 0;
             default:
                 cout << "Invalid choice! Please try again." << endl;
         }
-    } while (choice != 6);
+    }
 
     return 0;
 }
