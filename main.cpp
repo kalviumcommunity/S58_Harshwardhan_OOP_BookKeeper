@@ -112,6 +112,10 @@ public:
         }
     }
 
+    static int getTotalSearches() {
+        return searchCount;
+    }
+
     ~Library() {
         for (auto book : books) {
             delete book;
@@ -180,7 +184,7 @@ int main() {
                 break;
             case 6:
                 cout << "Total Books in Library: " << Book::totalBooks << endl;
-                cout << "Total Searches Conducted: " << Library::searchCount << endl;
+                cout << "Total Searches Conducted: " << Library::getTotalSearches() << endl;
                 break;
             case 7:
                 cout << "Exiting the system..." << endl;
