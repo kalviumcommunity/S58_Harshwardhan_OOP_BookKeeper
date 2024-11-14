@@ -4,30 +4,68 @@
 
 using namespace std;
 
-class Book {
-private:
+// Base class Item
+class Item {
+protected:
     string title;
     string author;
-    string ISBN;
+
+public:
+    Item(string t, string a) : title(t), author(a) {}
+
+    virtual void getDetails() const {
+        cout << "Title: " << title << endl;
+        cout << "Author: " << author << endl;
+    }
+
+    string getTitle() const {
+        return title;
+    }
+
+    string getAuthor() const {
+        return author;
+    }
+};
+
+// Base class Borrowable
+class Borrowable {
+protected:
     bool isAvailable;
+
+public:
+    Borrowable() : isAvailable(true) {}
+
+    bool checkAvailability() const {
+        return isAvailable;
+    }
+
+    void setAvailability(bool status) {
+        isAvailable = status;
+    }
+};
+
+// Derived class Book using single inheritance from Item
+class Book : public Item {
+private:
+    string ISBN;
 
 public:
     static int totalBooks; // Static variable to keep track of total books added
 
     // Default constructor
-    Book() : title(""), author(""), ISBN(""), isAvailable(true) {
+    Book() : Item("", ""), ISBN("") {
         totalBooks++;
     }
 
     // Parameterized constructor
     Book(string t, string a, string isbn)
-        : title(t), author(a), ISBN(isbn), isAvailable(true) {
+        : Item(t, a), ISBN(isbn) {
         totalBooks++;
     }
 
     // Copy constructor
     Book(const Book& other)
-        : title(other.title), author(other.author), ISBN(other.ISBN), isAvailable(other.isAvailable) {
+        : Item(other.title, other.author), ISBN(other.ISBN) {
         totalBooks++;
     }
 
@@ -36,49 +74,29 @@ public:
         totalBooks--;
     }
 
-    // Accessors (getters)
-    string getTitle() const {
-        return this->title;
-    }
-
-    string getAuthor() const {
-        return this->author;
-    }
-
     string getISBN() const {
-        return this->ISBN;
+        return ISBN;
     }
 
-    bool checkAvailability() const {
-        return this->isAvailable;
-    }
-
-    // Mutators (setters)
-    void setTitle(const string& t) {
-        this->title = t;
-    }
-
-    void setAuthor(const string& a) {
-        this->author = a;
-    }
-
-    void setISBN(const string& isbn) {
-        this->ISBN = isbn;
-    }
-
-    void setAvailability(bool status) {
-        this->isAvailable = status;
-    }
-
-    void getDetails() const {
-        cout << "Title: " << title << endl;
-        cout << "Author: " << author << endl;
+    void getDetails() const override {
+        Item::getDetails();
         cout << "ISBN: " << ISBN << endl;
-        cout << "Available: " << (isAvailable ? "Yes" : "No") << endl;
     }
 };
 
 int Book::totalBooks = 0; // Initialize static variable
+
+// Derived class BorrowableBook using multiple inheritance from Book and Borrowable
+class BorrowableBook : public Book, public Borrowable {
+public:
+    BorrowableBook(string t, string a, string isbn)
+        : Book(t, a, isbn), Borrowable() {}
+
+    void getDetails() const override {
+        Book::getDetails();
+        cout << "Available: " << (isAvailable ? "Yes" : "No") << endl;
+    }
+};
 
 class Library {
 private:
@@ -179,7 +197,7 @@ int main() {
                 cout << "Enter book ISBN: ";
                 getline(cin, isbn);
 
-                Book* newBook = new Book(title, author, isbn); // Using parameterized constructor
+                Book* newBook = new BorrowableBook(title, author, isbn); // Using BorrowableBook
                 library.addBook(newBook);
                 break;
             }
