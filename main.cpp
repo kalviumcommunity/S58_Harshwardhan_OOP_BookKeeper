@@ -14,14 +14,26 @@ private:
 public:
     static int totalBooks; // Static variable to keep track of total books added
 
+    // Default constructor
+    Book() : title(""), author(""), ISBN(""), isAvailable(true) {
+        totalBooks++;
+    }
+
+    // Parameterized constructor
     Book(string t, string a, string isbn)
         : title(t), author(a), ISBN(isbn), isAvailable(true) {
-        totalBooks++; // Increment totalBooks whenever a new book is created
+        totalBooks++;
+    }
+
+    // Copy constructor
+    Book(const Book& other)
+        : title(other.title), author(other.author), ISBN(other.ISBN), isAvailable(other.isAvailable) {
+        totalBooks++;
     }
 
     // Destructor
     ~Book() {
-        totalBooks--; // Decrement totalBooks when a book is destroyed
+        totalBooks--;
     }
 
     // Accessors (getters)
@@ -167,7 +179,7 @@ int main() {
                 cout << "Enter book ISBN: ";
                 getline(cin, isbn);
 
-                Book* newBook = new Book(title, author, isbn); // Dynamic allocation
+                Book* newBook = new Book(title, author, isbn); // Using parameterized constructor
                 library.addBook(newBook);
                 break;
             }
