@@ -24,31 +24,45 @@ public:
         totalBooks--; // Decrement totalBooks when a book is destroyed
     }
 
-    void getDetails() const {
-        cout << "Title: " << title << endl;
-        cout << "Author: " << author << endl;
-        cout << "ISBN: " << ISBN << endl;
-        cout << "Available: " << (isAvailable ? "Yes" : "No") << endl;
-    }
-
-    bool checkAvailability() const {
-        return this->isAvailable;
-    }
-
-    string getISBN() const {
-        return this->ISBN;
-    }
-
-    void setAvailability(bool status) {
-        this->isAvailable = status;
-    }
-
+    // Accessors (getters)
     string getTitle() const {
         return this->title;
     }
 
     string getAuthor() const {
         return this->author;
+    }
+
+    string getISBN() const {
+        return this->ISBN;
+    }
+
+    bool checkAvailability() const {
+        return this->isAvailable;
+    }
+
+    // Mutators (setters)
+    void setTitle(const string& t) {
+        this->title = t;
+    }
+
+    void setAuthor(const string& a) {
+        this->author = a;
+    }
+
+    void setISBN(const string& isbn) {
+        this->ISBN = isbn;
+    }
+
+    void setAvailability(bool status) {
+        this->isAvailable = status;
+    }
+
+    void getDetails() const {
+        cout << "Title: " << title << endl;
+        cout << "Author: " << author << endl;
+        cout << "ISBN: " << ISBN << endl;
+        cout << "Available: " << (isAvailable ? "Yes" : "No") << endl;
     }
 };
 
