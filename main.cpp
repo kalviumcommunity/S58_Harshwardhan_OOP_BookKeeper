@@ -71,10 +71,9 @@ int Book::totalBooks = 0; // Initialize static variable
 class Library {
 private:
     vector<Book*> books;
-
-public:
     static int searchCount; // Static variable to keep track of searches
 
+public:
     void addBook(Book* book) {
         books.push_back(book);
         cout << "Book added successfully." << endl;
