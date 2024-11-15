@@ -13,10 +13,7 @@ protected:
 public:
     Item(string t, string a) : title(t), author(a) {}
 
-    virtual void getDetails() const {
-        cout << "Title: " << title << endl;
-        cout << "Author: " << author << endl;
-    }
+    virtual void getDetails() const = 0; // Pure virtual function
 
     string getTitle() const {
         return title;
@@ -79,7 +76,8 @@ public:
     }
 
     void getDetails() const override {
-        Item::getDetails();
+        cout << "Title: " << title << endl;
+        cout << "Author: " << author << endl;
         cout << "ISBN: " << ISBN << endl;
     }
 };
@@ -172,7 +170,6 @@ int Library::searchCount = 0; // Initialize static variable
 int main() {
     Library library;
     int choice;
-
     for (;;) {
         cout << "\nLibrary Management System\n";
         cout << "1. Add Book\n";
@@ -184,9 +181,7 @@ int main() {
         cout << "7. Exit\n";
         cout << "Enter your choice: ";
         cin >> choice;
-
         cin.ignore();
-
         switch (choice) {
             case 1: {
                 string title, author, isbn;
@@ -196,7 +191,6 @@ int main() {
                 getline(cin, author);
                 cout << "Enter book ISBN: ";
                 getline(cin, isbn);
-
                 Book* newBook = new BorrowableBook(title, author, isbn); // Using BorrowableBook
                 library.addBook(newBook);
                 break;
@@ -236,6 +230,5 @@ int main() {
                 cout << "Invalid choice! Please try again." << endl;
         }
     }
-
     return 0;
 }
