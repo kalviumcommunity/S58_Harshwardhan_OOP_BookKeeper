@@ -103,43 +103,44 @@ public:
 // Library class
 class Library {
 private:
-    vector<Book*> books;
+    vector<Item*> items; // Changed from Book* to Item*
     static int searchCount; // Static variable to keep track of searches
 
 public:
-    void addBook(Book* book) {
-        books.push_back(book);
-        cout << "Book added successfully." << endl;
+    void addItem(Item* item) { // Changed from addBook to addItem
+        items.push_back(item);
+        cout << "Item added successfully." << endl;
     }
 
-    void removeBook(string isbn) {
-        for (auto it = books.begin(); it != books.end(); ++it) {
-            if ((*it)->getISBN() == isbn) {
-                delete *it; // Deleting the book
-                books.erase(it);
+    void removeItem(string isbn) { // Changed from removeBook to removeItem
+        for (auto it = items.begin(); it != items.end(); ++it) {
+            Book* book = dynamic_cast<Book*>(*it);
+            if (book && book->getISBN() == isbn) {
+                delete *it; // Deleting the item
+                items.erase(it);
                 Book::totalBooks--; // Decrease the total books counter
-                cout << "Book removed successfully." << endl;
+                cout << "Item removed successfully." << endl;
                 return;
             }
         }
-        cout << "Book not found." << endl;
+        cout << "Item not found." << endl;
     }
 
-    void listBooks() const {
-        if (books.empty()) {
-            cout << "No books in the library." << endl;
+    void listItems() const { // Changed from listBooks to listItems
+        if (items.empty()) {
+            cout << "No items in the library." << endl;
             return;
         }
 
-        cout << "Listing all books in the library:\n";
-        for (const auto& book : books) {
-            book->getDetails();
+        cout << "Listing all items in the library:\n";
+        for (const auto& item : items) {
+            item->getDetails();
             cout << "---------------------------------" << endl;
         }
     }
 
-    const vector<Book*>& getBooks() const {
-        return books;
+    const vector<Item*>& getItems() const { // Changed from getBooks to getItems
+        return items;
     }
 
     static int getTotalSearches() {
@@ -151,8 +152,8 @@ public:
     }
 
     ~Library() {
-        for (auto book : books) {
-            delete book;
+        for (auto item : items) {
+            delete item;
         }
     }
 };
@@ -162,31 +163,31 @@ int Library::searchCount = 0; // Initialize static variable
 // LibrarySearch class
 class LibrarySearch {
 public:
-    static void searchBookByTitle(const Library& library, const string& title) {
+    static void searchItemByTitle(const Library& library, const string& title) { // Changed from searchBookByTitle to searchItemByTitle
         bool found = false;
-        for (const auto& book : library.getBooks()) {
-            if (book->getTitle() == title) {
-                book->getDetails();
+        for (const auto& item : library.getItems()) {
+            if (item->getTitle() == title) {
+                item->getDetails();
                 found = true;
             }
         }
         if (!found) {
-            cout << "No books found with title: " << title << endl;
+            cout << "No items found with title: " << title << endl;
         } else {
             Library::incrementSearchCount();
         }
     }
 
-    static void searchBookByAuthor(const Library& library, const string& author) {
+    static void searchItemByAuthor(const Library& library, const string& author) { // Changed from searchBookByAuthor to searchItemByAuthor
         bool found = false;
-        for (const auto& book : library.getBooks()) {
-            if (book->getAuthor() == author) {
-                book->getDetails();
+        for (const auto& item : library.getItems()) {
+            if (item->getAuthor() == author) {
+                item->getDetails();
                 found = true;
             }
         }
         if (!found) {
-            cout << "No books found by author: " << author << endl;
+            cout << "No items found by author: " << author << endl;
         } else {
             Library::incrementSearchCount();
         }
@@ -200,11 +201,11 @@ int main() {
 
     for (;;) {
         cout << "\nLibrary Management System\n";
-        cout << "1. Add Book\n";
-        cout << "2. Remove Book\n";
-        cout << "3. Search Book by Title\n";
-        cout << "4. Search Book by Author\n";
-        cout << "5. List All Books\n";
+        cout << "1. Add Item\n"; // Changed from Add Book to Add Item
+        cout << "2. Remove Item\n"; // Changed from Remove Book to Remove Item
+        cout << "3. Search Item by Title\n"; // Changed from Search Book by Title to Search Item by Title
+        cout << "4. Search Item by Author\n"; // Changed from Search Book by Author to Search Item by Author
+        cout << "5. List All Items\n"; // Changed from List All Books to List All Items
         cout << "6. Show Total Books and Searches\n";
         cout << "7. Exit\n";
         cout << "Enter your choice: ";
@@ -214,39 +215,39 @@ int main() {
         switch (choice) {
             case 1: {
                 string title, author, isbn;
-                cout << "Enter book title: ";
+                cout << "Enter item title: "; // Changed from book to item
                 getline(cin, title);
-                cout << "Enter book author: ";
+                cout << "Enter item author: "; // Changed from book to item
                 getline(cin, author);
-                cout << "Enter book ISBN: ";
+                cout << "Enter item ISBN: "; // Changed from book to item
                 getline(cin, isbn);
-                Book* newBook = new BorrowableBook(title, author, isbn); // Using BorrowableBook
-                library.addBook(newBook);
+                Item* newItem = new BorrowableBook(title, author, isbn); // Using BorrowableBook
+                library.addItem(newItem); // Changed from addBook to addItem
                 break;
             }
             case 2: {
                 string isbn;
-                cout << "Enter ISBN of the book to remove: ";
+                cout << "Enter ISBN of the item to remove: "; // Changed from book to item
                 getline(cin, isbn);
-                library.removeBook(isbn);
+                library.removeItem(isbn); // Changed from removeBook to removeItem
                 break;
             }
             case 3: {
                 string title;
-                cout << "Enter title of the book to search: ";
+                cout << "Enter title of the item to search: "; // Changed from book to item
                 getline(cin, title);
-                LibrarySearch::searchBookByTitle(library, title);
+                LibrarySearch::searchItemByTitle(library, title); // Changed from searchBookByTitle to searchItemByTitle
                 break;
             }
             case 4: {
                 string author;
-                cout << "Enter author of the book to search: ";
+                cout << "Enter author of the item to search: "; // Changed from book to item
                 getline(cin, author);
-                LibrarySearch::searchBookByAuthor(library, author);
+                LibrarySearch::searchItemByAuthor(library, author); // Changed from searchBookByAuthor to searchItemByAuthor
                 break;
             }
             case 5:
-                library.listBooks();
+                library.listItems(); // Changed from listBooks to listItems
                 break;
             case 6:
                 cout << "Total Books in Library: " << Book::totalBooks << endl;
