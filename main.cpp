@@ -22,6 +22,8 @@ public:
     string getAuthor() const {
         return author;
     }
+
+    virtual ~Item() = default; // Virtual destructor
 };
 
 // Base class Borrowable
@@ -39,6 +41,8 @@ public:
     void setAvailability(bool status) {
         isAvailable = status;
     }
+
+    virtual ~Borrowable() = default; // Virtual destructor
 };
 
 // Derived class Book using single inheritance from Item
