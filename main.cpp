@@ -96,6 +96,7 @@ public:
     }
 };
 
+// Library class
 class Library {
 private:
     vector<Book*> books;
@@ -112,29 +113,8 @@ public:
             if ((*it)->getISBN() == isbn) {
                 delete *it; // Deleting the book
                 books.erase(it);
+                Book::totalBooks--; // Decrease the total books counter
                 cout << "Book removed successfully." << endl;
-                return;
-            }
-        }
-        cout << "Book not found." << endl;
-    }
-
-    void searchBookByTitle(string title) const {
-        for (const auto& book : books) {
-            if (book->getTitle() == title) {
-                book->getDetails();
-                Library::searchCount++; // Increment search count
-                return;
-            }
-        }
-        cout << "Book not found." << endl;
-    }
-
-    void searchBookByAuthor(string author) const {
-        for (const auto& book : books) {
-            if (book->getAuthor() == author) {
-                book->getDetails();
-                Library::searchCount++; // Increment search count
                 return;
             }
         }
@@ -147,14 +127,23 @@ public:
             return;
         }
 
+        cout << "Listing all books in the library:\n";
         for (const auto& book : books) {
             book->getDetails();
-            cout << "-------------------" << endl;
+            cout << "---------------------------------" << endl;
         }
+    }
+
+    const vector<Book*>& getBooks() const {
+        return books;
     }
 
     static int getTotalSearches() {
         return searchCount;
+    }
+
+    static void incrementSearchCount() {
+        searchCount++;
     }
 
     ~Library() {
@@ -166,10 +155,45 @@ public:
 
 int Library::searchCount = 0; // Initialize static variable
 
+// LibrarySearch class
+class LibrarySearch {
+public:
+    static void searchBookByTitle(const Library& library, const string& title) {
+        bool found = false;
+        for (const auto& book : library.getBooks()) {
+            if (book->getTitle() == title) {
+                book->getDetails();
+                found = true;
+            }
+        }
+        if (!found) {
+            cout << "No books found with title: " << title << endl;
+        } else {
+            Library::incrementSearchCount();
+        }
+    }
+
+    static void searchBookByAuthor(const Library& library, const string& author) {
+        bool found = false;
+        for (const auto& book : library.getBooks()) {
+            if (book->getAuthor() == author) {
+                book->getDetails();
+                found = true;
+            }
+        }
+        if (!found) {
+            cout << "No books found by author: " << author << endl;
+        } else {
+            Library::incrementSearchCount();
+        }
+    }
+};
+
 // Main code
 int main() {
     Library library;
     int choice;
+
     for (;;) {
         cout << "\nLibrary Management System\n";
         cout << "1. Add Book\n";
@@ -181,7 +205,8 @@ int main() {
         cout << "7. Exit\n";
         cout << "Enter your choice: ";
         cin >> choice;
-        cin.ignore();
+        cin.ignore(); // Ignore newline character after reading choice
+
         switch (choice) {
             case 1: {
                 string title, author, isbn;
@@ -206,14 +231,14 @@ int main() {
                 string title;
                 cout << "Enter title of the book to search: ";
                 getline(cin, title);
-                library.searchBookByTitle(title);
+                LibrarySearch::searchBookByTitle(library, title);
                 break;
             }
             case 4: {
                 string author;
                 cout << "Enter author of the book to search: ";
                 getline(cin, author);
-                library.searchBookByAuthor(author);
+                LibrarySearch::searchBookByAuthor(library, author);
                 break;
             }
             case 5:
@@ -230,5 +255,6 @@ int main() {
                 cout << "Invalid choice! Please try again." << endl;
         }
     }
+
     return 0;
 }
